@@ -42,7 +42,7 @@
                     </div>
                     <div class="relative">
                         <i class="table--search--input--icon fas fa-search "></i>
-                        <input class="table--search--input" type="text" placeholder="Search invoice">
+                        <input class="table--search--input" type="text" placeholder="Search invoice" v-model="searchInvoice" @keyup="search()">
                     </div>
                 </div>
 
@@ -63,10 +63,10 @@
                     <p v-if="item.customer">{{ item.customer.first_name }}</p>
                     <p v-else></p>
                     <p>{{ item.due_date }}</p>
-                    <p> $ {{ item.total }}</p>
+                    <p> ₹ {{ item.total }}</p>
                 </div>
                 <div class="table--items" v-else>
-                    <p>Invoice not found </p>
+                    <p class="item-empty">Invoice not found </p>
                 </div>
             </div>
 
@@ -80,6 +80,7 @@
     import { onMounted, ref } from "vue"
 
     let invoices = ref([])
+    let searchInvoice = ref([])
 
     onMounted(async => {
         getInvoicesList()
@@ -87,6 +88,12 @@
 
     const getInvoicesList = async () => {
         let result = await axios.get("api/get_all_invoices")
+        //console.log(result)
+        invoices.value = result.data.invoices
+    }
+
+    const search = async () => {
+        let result = await axios.get("api/get_all_invoices?search="+searchInvoice.value)
         //console.log(result)
         invoices.value = result.data.invoices
     }

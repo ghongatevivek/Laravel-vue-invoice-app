@@ -7,11 +7,15 @@ use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $getInvoice = Invoice::with([
             'customer' => fn ($q) => $q->select('id', 'first_name'),
-        ])->latest('id')->get();
+        ])
+        ->when($request->search != null, function($query) use ($request){
+            $query->where('number', 'like', '%' . $request->search . '%');
+        })
+        ->latest('id')->get();
 
         return response()->json([
             'invoices' => $getInvoice,
