@@ -21,4 +21,13 @@ class InvoiceController extends Controller
             'invoices' => $getInvoice,
         ], 200);
     }
+
+    public function create()
+    {
+        $sampleFormData =  [
+            'date' => date('Y-m-d'),
+            'due_date' => date('Y-m-d'),
+        ];
+        return response()->json(['form_data' => $sampleFormData], 200);
+    }
 }

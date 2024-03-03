@@ -7,7 +7,7 @@
                     <h2 class="invoice__title">Invoices</h2>
                 </div>
                 <div>
-                    <a class="btn btn-secondary">
+                    <a class="btn btn-secondary" @click="createInvoice()">
                         New Invoice
                     </a>
                 </div>
@@ -79,6 +79,9 @@
 <script setup>
     import { onMounted, ref } from "vue"
 
+    import { useRouter } from 'vue-router'
+
+    const router = useRouter()
     let invoices = ref([])
     let searchInvoice = ref([])
 
@@ -96,5 +99,10 @@
         let result = await axios.get("api/get_all_invoices?search="+searchInvoice.value)
         //console.log(result)
         invoices.value = result.data.invoices
+    }
+
+    const createInvoice = async () => {
+        let form = await axios.get('api/create/invoice')
+        router.push('/invoice/new')
     }
 </script>
