@@ -8,7 +8,7 @@
                 </div>
                 <div>
                     <a class="btn btn-secondary" @click="createInvoice()">
-                        New Invoice
+                        Create
                     </a>
                 </div>
             </div>
