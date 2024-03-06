@@ -27,6 +27,7 @@ class InvoiceController extends Controller
         $sampleFormData =  [
             'date' => date('Y-m-d'),
             'due_date' => date('Y-m-d'),
+            'discount' => 0
         ];
         return response()->json(['form_data' => $sampleFormData], 200);
     }

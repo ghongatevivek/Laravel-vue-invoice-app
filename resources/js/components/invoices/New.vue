@@ -40,7 +40,7 @@
 
                     <div class="table--heading2">
                         <p>Item Description</p>
-                        <p>Unit Price</p>
+                        <p>Price</p>
                         <p>Qty</p>
                         <p>Total</p>
                         <p></p>
@@ -50,13 +50,13 @@
                     <div class="table--items2" v-for="(itemCart, i) in listCart" :key="itemCart.id">
                         <p>#{{ itemCart.item_code }} {{ itemCart.description }} </p>
                         <p>
-                            <input type="text" class="input" v-model="itemCart.unit_price">
+                            <input type="text" class="input" v-model="itemCart.price" readonly>
                         </p>
                         <p>
                             <input type="text" class="input" v-model="itemCart.quantity">
                         </p>
                         <p v-if="itemCart.quantity">
-                            ₹ {{ (itemCart.quantity) * (itemCart.unit_price) }}
+                            ₹ {{ (itemCart.quantity) * (itemCart.price) }}
                         </p>
                         <p v-else></p>
 
@@ -66,7 +66,7 @@
                     </div>
                     <div style="padding: 10px 30px !important;">
                         <button class="btn btn-sm btn__open--modal" @click="openModel()">
-                            Add New Line
+                            Add New Product
                         </button>
                     </div>
                 </div>
@@ -79,15 +79,15 @@
                     <div>
                         <div class="table__footer--subtotal">
                             <p>Sub Total</p>
-                            <span>₹ 1000</span>
+                            <span>₹ {{ subTotal() }}</span>
                         </div>
                         <div class="table__footer--discount">
                             <p>Discount</p>
-                            <input type="text" class="input">
+                            <input type="text" class="input" v-model="form.discount">
                         </div>
                         <div class="table__footer--total">
                             <p>Grand Total</p>
-                            <span>₹ 1200</span>
+                            <span>₹ {{ grandTotal() }}</span>
                         </div>
                     </div>
                 </div>
@@ -178,8 +178,8 @@
             id : item.id,
             item_code : item.item_code,
             description : item.description,
-            unit_price : item.unit_price,
-            quantity : item.quantity,
+            price : item.price,
+            quantity : item.quantity??1,
         }
 
         listCart.value.push(itemCart)
@@ -206,5 +206,17 @@
 
     const invoiceList = () => {
         router.push('/');
+    }
+
+    const subTotal = () => {
+        let total = 0
+        listCart.value.map((data) => {
+            total = total + (data.quantity * data.price)
+        })
+        return total
+    }
+
+    const grandTotal = () => {
+        return subTotal() - form.value.discount
     }
 </script>
