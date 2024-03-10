@@ -219,4 +219,8 @@
     const grandTotal = () => {
         return subTotal() - form.value.discount
     }
+
+    const saveInvoice = () => {
+        
+    }
 </script>
