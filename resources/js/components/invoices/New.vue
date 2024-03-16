@@ -12,14 +12,14 @@
                     </a>
                 </div>
             </div>
-
+            <form @submit.prevent="saveInvoice">
             <div class="card__content">
                 <div class="card__content--header">
                     <div>
                         <p class="my-1">Customer</p>
-                        <select name="" id="" class="input" v-model="customer_id">
+                        <select name="" id="" class="input" v-model="form.customer_id">
                             <option value="" disabled>Select customer</option>
-                            <option value="cust.id" v-for="cust in allCustomersData" :key="cust.id">{{ cust.first_name }}</option>
+                            <option :value="cust.id" v-for="cust in allCustomersData" :key="cust.id">{{ cust.first_name }}</option>
                         </select>
                     </div>
                     <div>
@@ -30,7 +30,7 @@
                     </div>
                     <div>
                         <p class="my-1">Invoice Number</p>
-                        <input type="text" class="input">
+                        <input type="text" class="input" v-model="form.invoice_no">
                         <p class="my-1">Reference(Optional)</p>
                         <input type="text" class="input">
                     </div>
@@ -65,16 +65,16 @@
                         </p>
                     </div>
                     <div style="padding: 10px 30px !important;">
-                        <button class="btn btn-sm btn__open--modal" @click="openModel()">
+                        <a class="btn btn-sm btn__open--modal" @click="openModel()">
                             Add New Product
-                        </button>
+                        </a>
                     </div>
                 </div>
 
                 <div class="table__footer">
                     <div class="document-footer">
                         <p>Terms and Conditions</p>
-                        <textarea cols="50" rows="3" class="textarea"></textarea>
+                        <textarea cols="50" rows="3" v-model="form.terms_and_condition" class="textarea">Tax included in grand total</textarea>
                     </div>
                     <div>
                         <div class="table__footer--subtotal">
@@ -99,12 +99,12 @@
 
                 </div>
                 <div>
-                    <a class="btn btn-secondary">
+                    <button type="submit" class="btn btn-secondary">
                         Save
-                    </a>
+                    </button>
                 </div>
             </div>
-
+            </form>
         </div>
         <!--==================== add modal items ====================-->
         <div class="modal main__modal " :class="{show : showModel}">
@@ -220,7 +220,31 @@
         return subTotal() - form.value.discount
     }
 
-    const saveInvoice = () => {
-        
+    const saveInvoice = async () => {
+        if(listCart.value.length > 0){
+            let subTotalAmt = 0
+            subTotalAmt = subTotal()    
+            
+            let totalAmt = 0
+            totalAmt = grandTotal()
+            
+            try {
+                form.value.sub_total = subTotalAmt 
+                form.value.total = totalAmt 
+                form.value.cart_items = listCart.value 
+                const response = await axios.post('/api/save-invoice', form.value);
+                if(response.data.status == 200){
+                    router.push('/');
+                }else if(response.data.status == 500){
+                    alert(response.data.message);
+                }
+                
+            } catch (error) {
+                console.error('Error submitting form:', error);
+            }
+        }else{
+            console.error('Please select product');
+
+        }
     }
 </script>
