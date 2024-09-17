@@ -7,6 +7,12 @@
                     <h2 class="invoice__title">Invoices</h2>
                 </div>
                 <div>
+                    <a class="btn btn-secondary" @click="manageProducts()">
+                        Manage Products
+                    </a>
+                    <a class="btn btn-secondary" @click="manageCustomers()">
+                        Manage Customers
+                    </a>
                     <a class="btn btn-secondary" @click="createInvoice()">
                         Create
                     </a>
@@ -104,5 +110,12 @@
     const createInvoice = async () => {
         let form = await axios.get('api/create/invoice')
         router.push('/invoice/new')
+    }
+
+    const manageCustomers = async () => {
+        router.push('/customers/list')
+    }
+    const manageProducts = async () => {
+        router.push('/products/list')
     }
 </script>

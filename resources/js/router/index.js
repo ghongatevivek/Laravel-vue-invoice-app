@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import invoiceIndex from '../components/invoices/Index.vue'
 import newInvoice from '../components/invoices/New.vue'
+import customerList from '../components/customer/Index.vue'
+import productList from '../components/product/Index.vue'
 import notFound from '../components/NotFound.vue'
 
 const routes = [
@@ -13,6 +15,16 @@ const routes = [
     {
         path: '/invoice/new/',
         component: newInvoice,
+
+    },
+    {
+        path: '/customers/list/',
+        component: customerList,
+
+    },
+    {
+        path: '/products/list/',
+        component: productList,
 
     },
     {
