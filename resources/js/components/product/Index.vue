@@ -14,7 +14,9 @@
             </div>
 
             <div class="table card__content">
-
+                <div>
+                    <a class="btn btn-secondary" @click="openModel()">Create</a>
+                </div>
                 <div class="table--search">
                     <div class="table--search--wrapper">
                         <select class="table--search--select" name="" id="">
@@ -48,6 +50,41 @@
 
 
         </div>
+
+        <!--==================== add product modal ====================-->
+        <div class="modal main__modal " :class="{show : showModel}">
+            <div class="modal__content">
+                <span class="modal__close btn__close--modal" @click="closeModel()">×</span>
+                <h3 class="modal__title">Add Product</h3>
+                <hr><br>
+                <form @submit.prevent="saveProduct">
+                <div class="">
+                        <div>
+                            <p class="my-1">Product Code</p>
+                            <input placeholder="Product Code" type="text" class="input" v-model="productFrm.code" id="code" />
+                        </div>
+                        <div>
+                            <p class="my-1">Product Description</p>
+                            <textarea placeholder="Product Description" v-model="productFrm.description" class="textarea" id="description"></textarea>
+                        </div>
+                        <div>
+                            <p class="my-1">Product Price</p>
+                            <input placeholder="Product Price" type="text" class="input" v-model="productFrm.price" id="price" />
+                        </div>
+                        
+                        
+                    </div>
+                    <br>
+                    <hr>
+                    <div class="model__footer">
+                        <button class="btn btn-light mr-2 btn__close--modal" @click="closeModel()">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-light btn__close--modal ">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
 </template>
@@ -56,6 +93,14 @@
     import { onMounted, ref } from "vue"
 
     import { useRouter } from 'vue-router'
+
+    const showModel = ref(false)
+    const hideMode = ref(true)
+    let productFrm = ref({
+        code: '',
+        price: '',
+        description: ''
+    })
 
     const router = useRouter()
     let products = ref([])
@@ -71,10 +116,27 @@
         products.value = result.data.products
     }
 
-    // const search = async () => {
-    //     let result = await axios.get("api/get_all_invoices?search="+searchInvoice.value)
-    //     //console.log(result)
-    //     invoices.value = result.data.invoices
-    // }
+    const openModel = () => {
+        showModel.value = !showModel.value
+    }
+
+    const closeModel = () => {
+        showModel.value = !hideMode.value
+    }
+
+    const saveProduct = async () => {   
+        try {
+            const response = await axios.post('/api/save-product', productFrm.value);
+            if(response.data.status == 200){
+                closeModel()
+                getProductsList()
+            }else if(response.data.status == 500){
+                alert(response.data.message);
+            }
+            
+        } catch (error) {
+            console.error('Error submitting form:', error);
+        }
+    }
 
 </script>

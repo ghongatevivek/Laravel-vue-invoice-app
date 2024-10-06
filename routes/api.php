@@ -27,3 +27,4 @@ Route::post('/save-invoice', [InvoiceController::class, 'store']); // store invo
 // Customer
 Route::get('/customers', [CustomerController::class, 'index']);
 Route::get('/products', [ProductController::class, 'index']);
+Route::post('/save-product', [ProductController::class, 'store']);
