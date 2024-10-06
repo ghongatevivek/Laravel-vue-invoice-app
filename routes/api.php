@@ -27,5 +27,7 @@ Route::post('/save-invoice', [InvoiceController::class, 'store']); // store invo
 // Customer
 Route::get('/customers', [CustomerController::class, 'index']);
 Route::post('/save-customer', [CustomerController::class, 'store']);
+Route::delete('/customers/{id}', [CustomerController::class, 'destroy']);
 Route::get('/products', [ProductController::class, 'index']);
+Route::delete('/products/{id}', [ProductController::class, 'destroy']);
 Route::post('/save-product', [ProductController::class, 'store']);

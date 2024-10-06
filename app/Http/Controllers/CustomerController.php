@@ -35,4 +35,14 @@ class CustomerController extends Controller
         return response()->json(['message' => 'Customer Saved.', 'status' => 200]);
 
     }
+
+    public function destroy($customerId)
+    {
+        $customer = Customer::where('id', $customerId)->first();
+        if($customer == null){
+            return response()->json(['status' => 500, 'message' => 'Customer not found.', 'response' => []]);
+        }
+        $customer->delete();
+        return response()->json(['message' => 'Customer Deleted.', 'status' => 200]);
+    }
 }

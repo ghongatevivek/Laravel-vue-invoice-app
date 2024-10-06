@@ -41,8 +41,8 @@
                 <!-- item 1 -->
                 <div class="table--items" v-for="item in customers" :key="item.id" v-if="customers.length">
                     <p>
-                        <a href="#" style="margin: 5px;" data-prdid="{{item.id}}">Edit</a>
-                        <a href="#" style="margin: 5px;" data-prdid="{{item.id}}">Delete</a>    
+                        <a href="javascript:void(0)" @click="editCustomer(item.id)" style="cursor: pointer;margin: 5px;">Edit</a>
+                        <a href="javascript:void(0)" @click="confirmDelete(item.id)" style="cursor: pointer;margin: 5px;">Delete</a>    
                     </p>
                     <p>{{ item.first_name }} {{ item.last_name }}</p>
                     <p>#{{ item.email }}</p>
@@ -145,6 +145,26 @@
 
     const invoiceList = () => {
         router.push('/');
+    }
+
+    const deleteCustomer = async (customerId) => {
+        try {
+            const response = await axios.delete(`/api/customers/${customerId}`);
+            if(response.data.status == 200){
+                getCustomersList()
+            }else if(response.data.status == 500){
+                alert(response.data.message);
+            }
+            
+        } catch (error) {
+            console.error('Error submitting form:', error);
+        }
+    }
+
+    const confirmDelete = (customerId) => {
+        if (confirm('Are you sure you want to delete this customer?')) {
+            deleteCustomer(customerId);
+      }
     }
    
 </script>

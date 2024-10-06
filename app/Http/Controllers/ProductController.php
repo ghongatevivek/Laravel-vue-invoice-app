@@ -31,6 +31,16 @@ class ProductController extends Controller
             return response()->json(['status' => 500, 'message' => 'Something went Wrong.', 'response' => $th->getMessage()]);
         }
         return response()->json(['message' => 'Product Saved.', 'status' => 200]);
-
+        
+    }
+    
+    public function destroy($productId)
+    {
+        $product = Product::where('id', $productId)->first();
+        if($product == null){
+            return response()->json(['status' => 500, 'message' => 'Product not found.', 'response' => []]);
+        }
+        $product->delete();
+        return response()->json(['message' => 'Product Deleted.', 'status' => 200]);
     }
 }

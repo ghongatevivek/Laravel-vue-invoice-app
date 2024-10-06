@@ -39,8 +39,8 @@
                 <!-- item 1 -->
                 <div class="table--items" v-for="item in products" :key="item.id" v-if="products.length">
                     <p>
-                        <a href="#" style="margin: 5px;" data-prdid="{{item.id}}">Edit</a>
-                        <a href="#" style="margin: 5px;" data-prdid="{{item.id}}">Delete</a>    
+                        <a href="javascript:void(0)" @click="editProduct(item.id)" style="cursor: pointer;margin: 5px;">Edit</a>
+                        <a href="javascript:void(0)" @click="confirmDelete(item.id)" style="cursor: pointer;margin: 5px;">Delete</a>    
                     </p>
                     <p>{{ item.item_code }}</p>
                     <p>{{ item.description }}</p>
@@ -144,6 +144,26 @@
 
     const invoiceList = () => {
         router.push('/');
+    }
+
+    const deleteProduct = async (productId) => {
+        try {
+            const response = await axios.delete(`/api/products/${productId}`);
+            if(response.data.status == 200){
+                getProductsList()
+            }else if(response.data.status == 500){
+                alert(response.data.message);
+            }
+            
+        } catch (error) {
+            console.error('Error submitting form:', error);
+        }
+    }
+
+    const confirmDelete = (productId) => {
+        if (confirm('Are you sure you want to delete this product?')) {
+        deleteProduct(productId);
+      }
     }
 
 </script>
