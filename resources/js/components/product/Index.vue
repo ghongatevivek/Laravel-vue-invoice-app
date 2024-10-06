@@ -7,8 +7,8 @@
                     <h2 class="invoice__title">Manage Products</h2>
                 </div>
                 <div>
-                    <a class="btn btn-secondary" @click="createInvoice()">
-                        Manage Invoice
+                    <a class="btn btn-secondary" @click="invoiceList()">
+                        Home
                     </a>
                 </div>
             </div>
@@ -30,7 +30,7 @@
                 </div>
 
                 <div class="table--heading">
-                    <p>ID</p>
+                    <p>Action</p>
                     <p>Item code</p>
                     <p>Description</p>
                     <p>Price</p>
@@ -38,13 +38,16 @@
 
                 <!-- item 1 -->
                 <div class="table--items" v-for="item in products" :key="item.id" v-if="products.length">
-                    <a href="#" class="table--items--transactionId">#{{item.id}}</a>
+                    <p>
+                        <a href="#" style="margin: 5px;" data-prdid="{{item.id}}">Edit</a>
+                        <a href="#" style="margin: 5px;" data-prdid="{{item.id}}">Delete</a>    
+                    </p>
                     <p>{{ item.item_code }}</p>
                     <p>{{ item.description }}</p>
                     <p> ₹ {{ item.price }}</p>
                 </div>
                 <div class="table--items" v-else>
-                    <p class="item-empty">Invoice not found </p>
+                    <p class="item-empty">Product not found </p>
                 </div>
             </div>
 
@@ -137,6 +140,10 @@
         } catch (error) {
             console.error('Error submitting form:', error);
         }
+    }
+
+    const invoiceList = () => {
+        router.push('/');
     }
 
 </script>

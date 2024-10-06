@@ -4,22 +4,19 @@
 
             <div class="card__header">
                 <div>
-                    <h2 class="invoice__title">Invoices</h2>
+                    <h2 class="invoice__title">Manage Customers</h2>
                 </div>
                 <div>
-                    <a class="btn btn-secondary" @click="createInvoice()">
-                        Manage Products
-                    </a>
-                    <a class="btn btn-secondary" @click="createInvoice()">
-                        Manage Customers
-                    </a>
-                    <a class="btn btn-secondary" @click="createInvoice()">
-                        Create
+                    <a class="btn btn-secondary" @click="invoiceList()">
+                        Home
                     </a>
                 </div>
             </div>
 
             <div class="table card__content">
+                <div>
+                    <a class="btn btn-secondary" @click="openModel()">Create</a>
+                </div>
                 
 
                 <div class="table--search">
@@ -35,7 +32,7 @@
                 </div>
 
                 <div class="table--heading">
-                    <p>ID</p>
+                    <p>Action</p>
                     <p>Name</p>
                     <p>Email</p>
                     <p>Address</p>
@@ -43,7 +40,10 @@
 
                 <!-- item 1 -->
                 <div class="table--items" v-for="item in customers" :key="item.id" v-if="customers.length">
-                    <a href="#" class="table--items--transactionId">#{{item.id}}</a>
+                    <p>
+                        <a href="#" style="margin: 5px;" data-prdid="{{item.id}}">Edit</a>
+                        <a href="#" style="margin: 5px;" data-prdid="{{item.id}}">Delete</a>    
+                    </p>
                     <p>{{ item.first_name }} {{ item.last_name }}</p>
                     <p>#{{ item.email }}</p>
                     <p>{{ item.address }}</p>
@@ -52,8 +52,42 @@
                     <p class="item-empty">Customer not found </p>
                 </div>
             </div>
-
-
+        </div>
+        <!--==================== add customer modal ====================-->
+        <div class="modal main__modal " :class="{show : showModel}">
+            <div class="modal__content">
+                <span class="modal__close btn__close--modal" @click="closeModel()">×</span>
+                <h3 class="modal__title">Add Customer</h3>
+                <hr><br>
+                <form @submit.prevent="saveCustomer">
+                <div class="">
+                        <div>
+                            <p class="my-1">First Name</p>
+                            <input placeholder="First Name" type="text" class="input" v-model="customerFrm.first_name" id="first_name" />
+                        </div>
+                        <div>
+                            <p class="my-1">Last Name</p>
+                            <input placeholder="Last Name" type="text" class="input" v-model="customerFrm.last_name" id="last_name" />
+                        </div>
+                        <div>
+                            <p class="my-1">Email</p>
+                            <input placeholder="Email" type="text" class="input" v-model="customerFrm.email" id="email" />
+                        </div>
+                        <div>
+                            <p class="my-1">Address</p>
+                            <textarea placeholder="Address" v-model="customerFrm.address" class="textarea" id="address"></textarea>
+                        </div>
+                    </div>
+                    <br>
+                    <hr>
+                    <div class="model__footer">
+                        <button class="btn btn-light mr-2 btn__close--modal" @click="closeModel()">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-light btn__close--modal ">Save</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -67,15 +101,50 @@
     const router = useRouter()
     let customers = ref([])
     let searchInvoice = ref([])
+    const showModel = ref(false)
+    const hideMode = ref(true)
+    let customerFrm = ref({
+        first_name: '',
+        last_name: '',
+        email: '',
+        address: ''
+    })
 
     onMounted(async => {
         getCustomersList()
     })
 
+    const openModel = () => {
+        showModel.value = !showModel.value
+    }
+
+    const closeModel = () => {
+        showModel.value = !hideMode.value
+    }
+
+    const saveCustomer = async () => {   
+        try {
+            const response = await axios.post('/api/save-customer', customerFrm.value);
+            if(response.data.status == 200){
+                closeModel()
+                getCustomersList()
+            }else if(response.data.status == 500){
+                alert(response.data.message);
+            }
+            
+        } catch (error) {
+            console.error('Error submitting form:', error);
+        }
+    }
+
     const getCustomersList = async () => {
         let result = await axios.get("/api/customers")
         //console.log(result)
         customers.value = result.data.customers
+    }
+
+    const invoiceList = () => {
+        router.push('/');
     }
    
 </script>

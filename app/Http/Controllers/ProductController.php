@@ -30,7 +30,7 @@ class ProductController extends Controller
             DB::rollBack();
             return response()->json(['status' => 500, 'message' => 'Something went Wrong.', 'response' => $th->getMessage()]);
         }
-        return response()->json(['message' => 'Invoice Saved.', 'status' => 200]);
+        return response()->json(['message' => 'Product Saved.', 'status' => 200]);
 
     }
 }
