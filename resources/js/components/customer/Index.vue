@@ -166,5 +166,29 @@
             deleteCustomer(customerId);
       }
     }
+
+    // edit code 
+    const editCustomer =  async (customerId) => {
+        showModel.value = !showModel.value;
+        try {
+            // Fetch the product data based on customerId
+            const response = await axios.get(`/api/customers/${customerId}`);
+            
+            if (response.data.status === 200) {
+            // Populate the form fields with the fetched product data
+            customerFrm.value = {
+                first_name: response.data.customer.first_name,
+                last_name: response.data.customer.last_name,
+                email: response.data.customer.email,
+                address: response.data.customer.address,
+                id: response.data.customer.id,
+            };
+            } else {
+                alert('Error fetching customer data');
+            }
+        } catch (error) {
+            console.error('Error fetching customer data:', error);
+        }
+    }
    
 </script>

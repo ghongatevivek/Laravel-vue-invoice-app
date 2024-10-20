@@ -21,18 +21,45 @@ class CustomerController extends Controller
     {
         DB::beginTransaction();
         try {
-            Customer::create([
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'email' => $request->email, 
-                'address' => $request->address, 
-            ]);
+            $message = '';
+            if($request->id){
+                $customer = Customer::where('id', $request->id)->first();
+                if($customer){
+                    $updateArr['first_name'] = $request->first_name;
+                    $updateArr['last_name'] = $request->last_name;
+                    $updateArr['email'] = $request->email;
+                    $updateArr['address'] = $request->address;
+
+                    $customer->update($updateArr);
+                    $message = '';
+                }
+                $message = 'Customer Updated.';
+            }else{
+
+                Customer::create([
+                    'first_name' => $request->first_name,
+                    'last_name' => $request->last_name,
+                    'email' => $request->email, 
+                    'address' => $request->address, 
+                ]);
+                $message = 'Customer Saved.';
+            }
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json(['status' => 500, 'message' => 'Something went Wrong.', 'response' => $th->getMessage()]);
         }
-        return response()->json(['message' => 'Customer Saved.', 'status' => 200]);
+        return response()->json(['message' => $message, 'status' => 200]);
+
+    }
+
+    public function show($id)
+    {
+        $getCustomer = Customer::where('id', $id)->first();
+        if($getCustomer == null){
+            return response()->json(['message' => 'Customer not found.', 'status' => 400]);
+        }  
+        return response()->json(['message' => 'Customer details .', 'status' => 200, 'customer' => $getCustomer]);
 
     }
 

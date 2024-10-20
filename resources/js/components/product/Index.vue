@@ -121,6 +121,12 @@
 
     const openModel = () => {
         showModel.value = !showModel.value
+        productFrm.value = {
+            id: '',
+            code: '',
+            price: '',
+            description: '',
+        };
     }
 
     const closeModel = () => {
@@ -164,6 +170,31 @@
         if (confirm('Are you sure you want to delete this product?')) {
         deleteProduct(productId);
       }
+    }
+
+    // edit code 
+    const editProduct =  async (productId) => {
+        showModel.value = !showModel.value;
+        try {
+            // Fetch the product data based on productId
+            const response = await axios.get(`/api/products/${productId}`);
+        
+            console.log(response.data);
+            
+            if (response.data.status === 200) {
+            // Populate the form fields with the fetched product data
+            productFrm.value = {
+                id: response.data.product.id,
+                code: response.data.product.item_code,
+                price: response.data.product.price,
+                description: response.data.product.description,
+            };
+            } else {
+            alert('Error fetching product data');
+            }
+        } catch (error) {
+            console.error('Error fetching product data:', error);
+        }
     }
 
 </script>
